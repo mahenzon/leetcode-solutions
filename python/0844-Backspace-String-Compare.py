@@ -21,11 +21,8 @@ class Solution:
         return line[index]
 
     def backspaceCompare(self, s: str, t: str) -> bool:
-        size_s = len(s)
-        size_t = len(t)
-
-        index_s = size_s
-        index_t = size_t
+        index_s = len(s)
+        index_t = len(t)
 
         while index_s > 0 or index_t > 0:
             index_s -= 1
