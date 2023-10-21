@@ -23,8 +23,8 @@ import collections
 #        Return None if this NestedInteger holds a single integer
 #        """
 
-# is there a way to solve it in O(1) by memory?
 
+# pre-unpack solution
 
 class NestedIterator:
     def __init__(self, nestedList: list[NestedInteger]):
@@ -44,6 +44,33 @@ class NestedIterator:
 
     def hasNext(self) -> bool:
         return len(self.integers) > 0
+
+
+# generators solution. does it consume more or less memory?
+
+class NestedIterator:
+    def __init__(self, nestedList: list[NestedInteger]):
+        self.iter = self.iterate(nestedList, top_level=True)
+        self.next_value = next(self.iter)
+
+    def iterate(self, nested_list: list[NestedInteger], top_level: bool = False):
+        for nested_elem in nested_list:
+            if nested_elem.isInteger():
+                yield nested_elem.getInteger()
+            else:
+                yield from self.iterate(nested_elem.getList())
+
+        if top_level:
+            yield None
+
+    def next(self) -> int:
+        ret_val = self.next_value
+        self.next_value = next(self.iter)
+        return ret_val
+
+    def hasNext(self) -> bool:
+        return self.next_value is not None
+
 
 # Your NestedIterator object will be instantiated and called as such:
 # i, v = NestedIterator(nestedList), []
