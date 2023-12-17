@@ -7,12 +7,12 @@ from typing import (
 
 
 class Solution:
-    """
-    @param points: n points on a 2D plane
-    @return: if there is such a line parallel to y-axis that reflect the given points
-    """
-
     def is_reflected(self, points: List[List[int]]) -> bool:
+        """
+        @param points: n points on a 2D plane
+        @return: if there is such a line parallel to y-axis that reflect the given points
+        """
+
         if not points:
             return True
 
