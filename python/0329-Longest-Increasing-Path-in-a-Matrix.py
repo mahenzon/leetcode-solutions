@@ -1,10 +1,5 @@
-# `functools` is already imported in LeetCode
-import functools
-
-
 class Solution:
 
-    @functools.lru_cache(maxsize=None)
     def dfs(self, row_idx: int, col_idx: int, last_val: int) -> int:
         if (
             row_idx < 0
@@ -18,17 +13,23 @@ class Solution:
         if val <= last_val:
             return 0
 
-        return 1 + max(
+        if self.cache[row_idx][col_idx] != -1:
+            return self.cache[row_idx][col_idx]
+
+        res = 1 + max(
             self.dfs(row_idx + 1, col_idx, val),
             self.dfs(row_idx - 1, col_idx, val),
             self.dfs(row_idx, col_idx + 1, val),
             self.dfs(row_idx, col_idx - 1, val),
         )
+        self.cache[row_idx][col_idx] = res
+        return res
 
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        self.matrix = matrix
         self.rows_count = len(matrix)
         self.cols_count = len(matrix[0])
-        self.matrix = matrix
+        self.cache = [[-1] * self.cols_count for _ in range(self.rows_count)]
         return max(
             self.dfs(row_idx, col_idx, -1)
             for row_idx in range(self.rows_count)
