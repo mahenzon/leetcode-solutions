@@ -6,48 +6,50 @@
 #         self.right = None
 
 class Codec:
+    SEP = "|"
     NULL = "N"
-    SPLIT = "|"
 
-    def _serialize_node(self, node: Optional[TreeNode]) -> None:
-        if node is None:
-            self.values.append(self.NULL)
-            return
-        self.values.append(str(node.val))
-        self._serialize_node(node.left)
-        self._serialize_node(node.right)
+    def serialize_preorder(self, root) -> list[str]:
+        stack = [root]
+        res = []
+        while stack:
+            node = stack.pop()
+            if node is None:
+                res.append(self.NULL)
+                continue
+            res.append(str(node.val))
+            stack.append(node.right)
+            stack.append(node.left)
+        return res
 
-    def _deserialize_tree(self) -> Optional[TreeNode]:
-        val = self.deserialized_values[self.idx]
+    def read_preorder(self, values: list[str]) -> Optional[TreeNode]:
+        val = values.pop()
         if val == self.NULL:
-            self.idx += 1
             return None
 
-        root = TreeNode(int(val))
-        self.idx += 1
-        root.left = self._deserialize_tree()
-        root.right = self._deserialize_tree()
-        return root
+        node = TreeNode(int(val))
+        node.left = self.read_preorder(values)
+        node.right = self.read_preorder(values)
+        return node
 
-    def serialize(self, root: Optional[TreeNode]) -> str:
+    def serialize(self, root):
         """Encodes a tree to a single string.
 
         :type root: TreeNode
         :rtype: str
         """
-        self.values: List[str] = []
-        self._serialize_node(root)
-        return self.SPLIT.join(self.values)
+        return self.SEP.join(self.serialize_preorder(root))
 
-    def deserialize(self, data: str) -> Optional[TreeNode]:
+    def deserialize(self, data):
         """Decodes your encoded data to tree.
 
         :type data: str
         :rtype: TreeNode
         """
-        self.deserialized_values = data.split(self.SPLIT)
-        self.idx = 0
-        return self._deserialize_tree()
+        values = data.split(self.SEP)
+        values.reverse()
+        return self.read_preorder(values)
+
 
 # Your Codec object will be instantiated and called as such:
 # ser = Codec()
