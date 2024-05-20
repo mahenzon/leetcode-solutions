@@ -14,3 +14,5 @@ class Solution:
                 result += reduce(operator.xor, combination)
 
         return result
+        # faster and shorter, but harder to get
+        # return reduce(operator.or_, nums) << len(nums) - 1
