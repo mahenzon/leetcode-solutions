@@ -5,3 +5,9 @@ class Solution:
 
         # [0, 1, 3] -> sum = 4, missing 2
         return sum(range(len(nums) + 1)) - sum(nums)
+
+        # alternative: only one cycle, but more lines:
+        count = len(nums)
+        # arithmetic progression instead of cycle
+        final_sum = count * (count + 1) // 2
+        return final_sum - sum(nums)
