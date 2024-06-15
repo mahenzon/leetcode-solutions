@@ -1,7 +1,9 @@
 class Solution:
-    def dfs(self, row, col, idx):
+    def dfs(self, row: int, col: int, idx: int) -> bool:
         if idx == len(self.word):
             return True
+
+        key = row, col
 
         if (
             row < 0
@@ -14,24 +16,24 @@ class Solution:
             or
             self.word[idx] != self.board[row][col]
             or
-            (row, col) in self.paths
+            key in self.paths
         ):
             return False
 
-        self.paths.add((row, col))
+        self.paths.add(key)
 
         res = False
-        for r, c in [
-            (1, 0),
+        for r, c in (
             (-1, 0),
-            (0, 1),
+            (1, 0),
             (0, -1),
-        ]:
+            (0, 1),
+        ):
             if self.dfs(row + r, col + c, idx + 1):
                 res = True
                 break
 
-        self.paths.remove((row, col))
+        self.paths.remove(key)
 
         return res
 
@@ -46,4 +48,5 @@ class Solution:
             for col in range(self.cols):
                 if self.dfs(row, col, 0):
                     return True
+
         return False
