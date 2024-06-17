@@ -1,49 +1,49 @@
 class Solution:
-    def backtrack(self, row):
+    def backtrack(self, row: int) -> None:
         if row == self.n:
             solution = ["".join(board_row) for board_row in self.board]
             self.res.append(solution)
             return
 
-        # check all cols
         for col in range(self.n):
-            pos_diagonal_value = row + col
-            neg_diagonal_value = row - col
+            pos_idx = row + col
+            neg_idx = row - col
             if (
-                # if is in this col
+                # col is occupied
                 col in self.occupied_cols
-                # if is in pos diagonal+
-                or pos_diagonal_value in self.occupied_pos_diagonals
-                # if is in neg diagonal-
-                or neg_diagonal_value in self.occupied_neg_diagonals
-
+                or
+                # +diag is occupied
+                pos_idx in self.occupied_pos_diag
+                or
+                # -diag is occupied
+                neg_idx in self.occupied_neg_diag
             ):
-                # this place can't be used
+                # skip this col
                 continue
 
-            # mark as used
+            # mark as occupied
             self.occupied_cols.add(col)
-            self.occupied_pos_diagonals.add(pos_diagonal_value)
-            self.occupied_neg_diagonals.add(neg_diagonal_value)
+            self.occupied_pos_diag.add(pos_idx)
+            self.occupied_neg_diag.add(neg_idx)
 
-            # check if this solution fits
+            # check if next sol. fits
             self.board[row][col] = "Q"
             self.backtrack(row + 1)
             self.board[row][col] = "."
 
-            # unmark as used
+            # unmark occupied
             self.occupied_cols.remove(col)
-            self.occupied_pos_diagonals.remove(pos_diagonal_value)
-            self.occupied_neg_diagonals.remove(neg_diagonal_value)
+            self.occupied_pos_diag.remove(pos_idx)
+            self.occupied_neg_diag.remove(neg_idx)
 
     def solveNQueens(self, n: int) -> List[List[str]]:
         self.n = n
         # col
         self.occupied_cols = set()
         # row + col
-        self.occupied_pos_diagonals = set()
+        self.occupied_pos_diag = set()
         # row - col
-        self.occupied_neg_diagonals = set()
+        self.occupied_neg_diag = set()
 
         self.res = []
         self.board = [["."] * n for _ in range(n)]
